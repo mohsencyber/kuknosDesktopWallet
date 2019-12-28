@@ -1,1 +1,4 @@
 # kuknosDesktopWallet
+
+depend on StellarQtSdk 
+
