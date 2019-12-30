@@ -19,7 +19,7 @@ public:
     void setNetWorkConfig(NetWorkInformation &h);
     void setDestAccount(QString destAcc);
     void setSrcAccountKey(QString accountID);
-    bool eventFilter(QObject *object,QEvent *event);
+    bool eventFilter(QObject *object,QEvent *event) ;
     ~FormCreateAcc();
 
 private slots:
@@ -30,6 +30,12 @@ private slots:
     void on_genNewSign_clicked();
 
     void on_srcAccountID_editingFinished();
+
+    void on_close_form();
+
+signals:
+
+    void signalCloseForm(QEvent::Type evtype);
 
 private:
     Ui::FormCreateAcc *ui;

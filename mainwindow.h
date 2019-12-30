@@ -17,7 +17,7 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    ~MainWindow() override;
 
 private slots:
     void on_pushButton_clicked();
@@ -41,6 +41,13 @@ private slots:
     void setCreateAccKeyState();
 
     void doOpenAccount();
+
+    void showSigners();
+
+    void onSourceAccReady(QEvent::Type evtype);
+
+private :
+    bool eventFilter(QObject *obj,QEvent *event) override;
 
 private:
     Ui::MainWindow *ui;

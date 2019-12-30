@@ -16,6 +16,7 @@ FormCreateAcc::FormCreateAcc(sourceAccount *srcaccnt,QWidget *parent) :
    ui->srcAccountID->setValidator(publicValidator);
 
     //ui->srcAccountID->installEventFilter(this);
+   connect(ui->pushButton_2, &QPushButton::clicked,this,&FormCreateAcc::on_close_form);
 }
 
 FormCreateAcc::~FormCreateAcc()
@@ -31,13 +32,11 @@ void FormCreateAcc::setNetWorkConfig(NetWorkInformation &h)
 {
     kuknosConfig = h;
 }
+
+
 void FormCreateAcc::on_pushButton_2_clicked()
 {
     m_srcAccount->setAccountID(ui->srcAccountID->text());
-    //QStringListModel strModel;
-
-    //ui->comboBox->setModel(&strModel);
-    //m_srcAccount->setSecretList(strModel.stringList());
     close();
 }
 
@@ -96,4 +95,9 @@ void FormCreateAcc::on_srcAccountID_editingFinished()
     mssgBox.addButton(QMessageBox::Ok);
     mssgBox.exec();
 */
+}
+
+void FormCreateAcc::on_close_form()
+{
+    emit this->signalCloseForm(QEvent::Close);
 }

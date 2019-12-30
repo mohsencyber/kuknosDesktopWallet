@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "QMessageBox"
 #include "formcreateacc.h"
+#include <QEvent>
 #include "../abpa_tokenizer/StellarQtSDK/src/keypair.h"
 #include "../abpa_tokenizer/StellarQtSDK/src/network.h"
 #include "../abpa_tokenizer/StellarQtSDK/src/server.h"
@@ -113,8 +114,35 @@ void MainWindow::on_createAccount_clicked()
     formcreater->setNetWorkConfig(kuknosNetConfig);
     //formcreater->setSrcAccountKey(ui->publicLine->text());
 
+    this->installEventFilter(formcreater);
+    //connect(formcreater,&FormCreateAcc::on_pushButton_2_clicked,this,&MainWindow::showSigners);
+    connect(formcreater,&FormCreateAcc::signalCloseForm,this,&MainWindow::onSourceAccReady);
     formcreater->show();
 
+    //ui->textEdit->append(m_srcAccount.getAccountID());
+}
+
+bool MainWindow::eventFilter(QObject *obj, QEvent *event)
+{
+    if ( event->type() == QEvent::Close )
+    {
+        ui->textEdit->append(m_srcAccount.getAccountID());
+        obj->event(event);
+    }
+    return true;
+}
+
+void MainWindow::onSourceAccReady(QEvent::Type evtype)
+{
+    if ( evtype == QEvent::Close )
+    {
+        ui->textEdit->append(m_srcAccount.getAccountID());
+        ui->textEdit->append(QString::number(m_srcAccount.getPrivateList().length()));
+    }
+    //create account in network
+}
+void MainWindow::showSigners()
+{
     ui->textEdit->append(m_srcAccount.getAccountID());
 }
 
