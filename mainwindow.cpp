@@ -6,6 +6,7 @@
 #include "../abpa_tokenizer/StellarQtSDK/src/keypair.h"
 #include "../abpa_tokenizer/StellarQtSDK/src/network.h"
 #include "../abpa_tokenizer/StellarQtSDK/src/server.h"
+#include "asset.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -17,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->TestNetButton->setChecked(true);
     ui->textEdit->setReadOnly(true);
     ui->createAccount->setEnabled(false);
+    ui->offerFrame->hide();
 
     connect(ui->publicLine,&QLineEdit::textChanged,this,&MainWindow::setCreateAccKeyState);
 }
@@ -45,6 +47,10 @@ void MainWindow::on_pushButton_2_clicked()
 
 void MainWindow::on_accountInfo_clicked()
 {
+    ui->textEdit->setDisabled(false);
+    ui->textEdit->showNormal();
+    ui->offerFrame->hide();
+
     Network::use(new Network(kuknosNetConfig.getNetworkID()));
     //Network::useTestNetwork();
     Server * server = new Server(kuknosNetConfig.getHorizonIpPort());
@@ -59,7 +65,7 @@ void MainWindow::on_accountInfo_clicked()
     } catch (std::exception e) {
         ui->textEdit->setPlainText("Invalid AccountID");
     }
-
+   //delete server;
 }
 
 void MainWindow::accountResponseShow(AccountResponse *accountResponse)
@@ -85,7 +91,7 @@ void MainWindow::accountResponseShow(AccountResponse *accountResponse)
 
 void MainWindow::on_TestNetButton_clicked()
 {
-    QString networkid="Kuknos-NET" ,horizonurl="http://srv2.tosan-kuknos.com:27202/";//"https://hz1-test.kuknos.org/";//"";
+    QString networkid="Kuknos-NET" ,horizonurl="https://hz1-test.kuknos.org/";//"";
     kuknosNetConfig.setNetworkID(networkid);
     kuknosNetConfig.setHorizonIpPort(horizonurl);
 }
@@ -101,6 +107,7 @@ void MainWindow::on_LiveNetButton_clicked()
 void MainWindow::on_pushButton_3_clicked()
 {
     ui->textEdit->clear();
+    ui->orderResult->clear();
 }
 
 void MainWindow::on_createaccount_clicked()
@@ -166,4 +173,72 @@ void MainWindow::setCreateAccKeyState()
 void MainWindow::doOpenAccount()
 {
     ui->textEdit->append(m_srcAccount.getAccountID());
+}
+
+void MainWindow::on_buyOffer_clicked()
+{
+    ui->textEdit->setDisabled(true);
+    ui->textEdit->hide();
+    ui->offerFrame->showNormal();
+    this->offertype=orderType::buy;
+    ui->buyOffer->setIcon(QIcon(":/ok-icon.png"));
+    ui->sellOffer->setIcon(QIcon());
+}
+
+void MainWindow::on_sellOffer_clicked()
+{
+    ui->textEdit->setDisabled(true);
+    ui->textEdit->hide();
+    ui->offerFrame->showNormal();
+    this->offertype = orderType::sell;
+    ui->sellOffer->setIcon(QIcon(":/ok-icon.png"));
+    ui->buyOffer->setIcon(QIcon());
+}
+
+void MainWindow::on_pushButton_4_clicked()
+{
+    Network::use(new Network(kuknosNetConfig.getNetworkID()));
+    //Network::useTestNetwork();
+    Server * server = new Server(kuknosNetConfig.getHorizonIpPort());
+    QString strResult=ui->publicLine->text();
+    QString strKey=strResult;
+    Asset *sellAsset;
+    Asset *buyAsset;
+    QString unitPriceCurrency,numberOFOrderCurrency,actionOrder;
+    if ( this->offertype == orderType::buy){
+        buyAsset = Asset::createNonNativeAsset( ui->assetCode->text(),KeyPair::fromAccountId(ui->assetIssuer->text()) );
+        sellAsset = Asset::create("native","","");
+        ui->sell_buy_label->setText("buy orders  :");
+        unitPriceCurrency=" ("+ui->assetCode->text()+") ";
+        numberOFOrderCurrency=" (PMN) ";
+        actionOrder = "buy";
+    }else{
+        sellAsset = Asset::createNonNativeAsset( ui->assetCode->text(),KeyPair::fromAccountId(ui->assetIssuer->text()) );
+        buyAsset = Asset::create("native","","");
+        ui->sell_buy_label->setText("sell orders :");
+        numberOFOrderCurrency=" ("+ui->assetCode->text()+") ";
+        unitPriceCurrency=" (PMN) ";
+        actionOrder = "sell";
+    }
+    try {
+        OrderBookResponse *orderResponse = server->orderBook().buyingAsset(buyAsset).sellingAsset(sellAsset).execute();
+        //ui->orderResult->appendPlainText(orderResponse->getBids()[0].getAmount());
+        connect(orderResponse,&OrderBookResponse::ready,[=](){
+            int lenOutput = orderResponse->getAsks().length();
+            if ( !lenOutput )
+                ui->orderResult->appendPlainText("no "+actionOrder+" order find");
+            for ( int i =0 ; i < lenOutput ; i ++)
+            {
+                ui->orderResult->appendPlainText("Unit Price : "+QString::number(orderResponse->getAsks()[i].getPrice().toDouble())+" "+ unitPriceCurrency);
+                ui->orderResult->appendPlainText("Number of order : "+QString::number(orderResponse->getAsks()[i].getAmount().toDouble())+" " + numberOFOrderCurrency);
+                ui->orderResult->appendPlainText("Total "+actionOrder+" order: "+QString::number(orderResponse->getAsks()[i].getAmount().toDouble())+numberOFOrderCurrency+" with amount : "+
+                                                 QString::number((orderResponse->getAsks()[i].getPrice().toDouble())*(orderResponse->getAsks()[i].getAmount().toDouble()))+ unitPriceCurrency);
+                ui->orderResult->appendPlainText("--------------------------------------------");
+            }
+        });
+
+
+    } catch (std::exception e) {
+        ui->textEdit->setPlainText("Invalid AccountID");
+    }
 }

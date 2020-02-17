@@ -11,6 +11,11 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
+enum orderType {
+    buy,
+    sell
+};
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -46,6 +51,12 @@ private slots:
 
     void onSourceAccReady(QEvent::Type evtype);
 
+    void on_buyOffer_clicked();
+
+    void on_sellOffer_clicked();
+
+    void on_pushButton_4_clicked();
+
 private :
     bool eventFilter(QObject *obj,QEvent *event) override;
 
@@ -53,5 +64,6 @@ private:
     Ui::MainWindow *ui;
     NetWorkInformation kuknosNetConfig;
     sourceAccount m_srcAccount;
+    int offertype;
 };
 #endif // MAINWINDOW_H

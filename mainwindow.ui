@@ -38,9 +38,9 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>530</y>
+      <y>536</y>
       <width>89</width>
-      <height>25</height>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
@@ -118,7 +118,7 @@
       <x>10</x>
       <y>140</y>
       <width>191</width>
-      <height>371</height>
+      <height>381</height>
      </rect>
     </property>
     <property name="title">
@@ -150,6 +150,41 @@
       <string>Create Account</string>
      </property>
     </widget>
+    <widget class="QPushButton" name="buyOffer">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>90</y>
+       <width>155</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Buy Offers</string>
+     </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="sellOffer">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>120</y>
+       <width>155</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Sell Offers</string>
+     </property>
+     <property name="icon">
+      <iconset theme="okIcon"/>
+     </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
+    </widget>
    </widget>
    <widget class="QTextEdit" name="textEdit">
     <property name="enabled">
@@ -177,6 +212,117 @@
      <string>Clear</string>
     </property>
    </widget>
+   <widget class="QFrame" name="offerFrame">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>150</y>
+      <width>561</width>
+      <height>381</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QLineEdit" name="assetCode">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>30</y>
+       <width>181</width>
+       <height>25</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="assetIssuer">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>70</y>
+       <width>421</width>
+       <height>25</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_3">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>50</y>
+       <width>67</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Asset</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_4">
+     <property name="geometry">
+      <rect>
+       <x>62</x>
+       <y>31</y>
+       <width>67</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>code:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_5">
+     <property name="geometry">
+      <rect>
+       <x>63</x>
+       <y>70</y>
+       <width>67</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>issuer:</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_4">
+     <property name="geometry">
+      <rect>
+       <x>470</x>
+       <y>30</y>
+       <width>71</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Ok</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="sell_buy_label">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>100</y>
+       <width>101</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>sell/buy</string>
+     </property>
+    </widget>
+    <widget class="QPlainTextEdit" name="orderResult">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>130</y>
+       <width>511</width>
+       <height>151</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
    <zorder>groupBox</zorder>
    <zorder>publicLine</zorder>
    <zorder>privateLine</zorder>
@@ -188,6 +334,7 @@
    <zorder>label_2</zorder>
    <zorder>textEdit</zorder>
    <zorder>pushButton_3</zorder>
+   <zorder>offerFrame</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
